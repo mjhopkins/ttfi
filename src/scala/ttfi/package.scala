@@ -43,7 +43,7 @@ package object ttfi {
   PushNegFI
 
    */
-  val parts = List(
+  val modules = List(
     Intro1
     , Intro2
     , Intro3
