@@ -48,20 +48,12 @@ object deps {
 object ProjectBuild extends Build {
 
   import Settings._
-/*
-  lazy val project = Project("root", file("."))
-    .settings(basicSettings: _*)
-    .settings(
-      Seq(run <<= run in Compile in core),
-    scalaSource in Compile := baseDirectory.value / "src" / "scala"
-    )
-    .aggregate(macros, core)
-*/
+
   lazy val macros = Project("macros", file("macros"))
     .settings(basicSettings: _*)
     .settings(
-      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
-      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-compiler" % _),
+      libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
+      libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
       libraryDependencies := {
         CrossVersion.partialVersion(scalaVersion.value) match {
           // if Scala 2.11+ is used, quasiquotes are available in the standard distribution
@@ -76,13 +68,10 @@ object ProjectBuild extends Build {
       }
     )
 
-  lazy val core = Project("core", file("."))
+  lazy val core = Project("ttfi", file("."))
     .settings(basicSettings: _*)
     .settings(
       projectDependencies ++= deps.scalaz ++ deps.argonaut ++ deps.time ++ deps.shapeless_2_1_0 ++ deps.spire
-      //++ deps.macroParadise,
-      //      projectDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
-      //      projectDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % "provided"
     )
    .settings(scalaSource in Compile := baseDirectory.value / "src" / "scala")
    .dependsOn(macros)
